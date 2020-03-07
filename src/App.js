@@ -1,24 +1,22 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { DatePicker, Card } from 'antd'
+import './App.scss';
 
 function App() {
+
+  const test = (date, dateString) => {
+    console.log(date, dateString)
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <h1>Web personal - Client</h1>
+      <DatePicker onChange={test}></DatePicker>
+      <Card title="Default size card" style={{ width: 300 }}>
+        <p>Card content</p>
+        <p>Card content</p>
+        <p>Card content</p>
+      </Card>
     </div>
   );
 }
