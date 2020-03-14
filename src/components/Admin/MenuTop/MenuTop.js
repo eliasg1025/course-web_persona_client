@@ -1,11 +1,17 @@
 import React from 'react';
-import { Layout, Button } from 'antd';
-import { MenuFoldOutlined, PoweroffOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
+import {
+  MenuFoldOutlined,
+  PoweroffOutlined,
+  MenuUnfoldOutlined
+} from '@ant-design/icons';
 import EliasLogo from '../../../assets/img/png/original.png';
 
 import './MenuTop.scss';
 
-export default function MenuTop() {
+export default function MenuTop(props) {
+  const { menuCollapsed, setMenuCollapsed } = props;
+
   return (
     <div className='menu-top'>
       <div className='menu-top__left'>
@@ -14,8 +20,8 @@ export default function MenuTop() {
           src={EliasLogo}
           alt='Elias Guere'
         />
-        <Button type='link' onClick={() => console.log('Click.')}>
-          <MenuFoldOutlined />
+        <Button type='link' onClick={() => setMenuCollapsed(!menuCollapsed)}>
+          {menuCollapsed ? <MenuFoldOutlined /> : <MenuUnfoldOutlined />}
         </Button>
       </div>
       <div className='menu-top__right'>

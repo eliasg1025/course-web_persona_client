@@ -2,15 +2,16 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { Layout, Menu } from 'antd';
-import { HomeFilled, MenuUnfoldOutlined } from '@ant-design/icons';
+import { HomeFilled, MenuOutlined } from '@ant-design/icons';
 
 import './MenuSider.scss';
 
-export default function MenuSider() {
+export default function MenuSider(props) {
+  const { menuCollapsed } = props;
   const { Sider } = Layout;
 
   return (
-    <Sider className='menu-sider'>
+    <Sider className='menu-sider' collapsed={menuCollapsed}>
       <Menu theme='dark' mode='inline' defaultSelectedKeys={['1']}>
         <Menu.Item key='1'>
           <Link to={'/admin'}>
@@ -20,7 +21,7 @@ export default function MenuSider() {
         </Menu.Item>
         <Menu.Item key='2'>
           <Link to={'/admin/menu'}>
-            <MenuUnfoldOutlined />
+            <MenuOutlined />
             <span className='nav-text'>Menu Web</span>
           </Link>
         </Menu.Item>
