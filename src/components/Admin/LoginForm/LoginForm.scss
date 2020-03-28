@@ -8,12 +8,12 @@
   &__input {
     .ant-input-prefix {
       i {
-        font-size: 0em + 22px / $defaultSize;
+        font-size: 0em + 22px / $defaultFontSize;
       }
     }
 
     input {
-      font-size: 0em + 20px / $defaultSize;
+      font-size: 0em + 20px / $defaultFontSize;
       padding: 20px 20px 20px 40px !important;
 
       &:focus {
@@ -25,7 +25,7 @@
 
   &__button {
     width: 100%;
-    font-size: 0em + 22px / $defaultSize;
+    font-size: 0em + 22px / $defaultFontSize;
     background-color: $primary-color;
     color: $font-light;
     height: 42px;
