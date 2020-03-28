@@ -5,6 +5,8 @@ import MenuTop from '../components/Admin/MenuTop';
 import MenuSider from '../components/Admin/MenuSider';
 import AdminSignIn from '../pages/Admin/Signin';
 
+import { getAccessToken, getRefreshToken } from '../api/auth';
+
 import './LayoutAdmin.scss';
 
 export default function LayoutAdmin(props) {
@@ -13,6 +15,10 @@ export default function LayoutAdmin(props) {
   const { Header, Content, Footer } = Layout;
 
   const user = null;
+
+  const accessToken = getAccessToken();
+  const refreshToken = getRefreshToken();
+  console.log(accessToken, refreshToken);
 
   if (!user) {
     return (
