@@ -4,31 +4,36 @@ import { Redirect } from 'react-router-dom';
 import Logo from '../../../assets/img/png/original.png';
 import RegisterForm from '../../../components/Admin/RegisterForm';
 import LoginForm from '../../../components/Admin/LoginForm/LoginForm';
+import { getAccessTokenApi } from '../../../api/auth';
 
 import './Signin.scss';
 
 export default function Signin() {
-  const { Content } = Layout;
-  const { TabPane } = Tabs;
+    const { Content } = Layout;
+    const { TabPane } = Tabs;
 
-  return (
-    <Layout className='sign-in'>
-      <Content className='sign-in__content'>
-        <h1 className='sign-in__content-logo'>
-          <img src={Logo} alt='Elias Guere' />
-        </h1>
+    if (getAccessTokenApi()) {
+        return <Redirect to='/admin' />;
+    }
 
-        <div className='sign-in__content-tabs'>
-          <Tabs type='card'>
-            <TabPane tab={<span>Entrar</span>} key='1'>
-              <LoginForm />
-            </TabPane>
-            <TabPane tab={<span>Nuevo Usuario</span>} key='2'>
-              <RegisterForm />
-            </TabPane>
-          </Tabs>
-        </div>
-      </Content>
-    </Layout>
-  );
+    return (
+        <Layout className='sign-in'>
+            <Content className='sign-in__content'>
+                <h1 className='sign-in__content-logo'>
+                    <img src={Logo} alt='Elias Guere' />
+                </h1>
+
+                <div className='sign-in__content-tabs'>
+                    <Tabs type='card'>
+                        <TabPane tab={<span>Entrar</span>} key='1'>
+                            <LoginForm />
+                        </TabPane>
+                        <TabPane tab={<span>Nuevo Usuario</span>} key='2'>
+                            <RegisterForm />
+                        </TabPane>
+                    </Tabs>
+                </div>
+            </Content>
+        </Layout>
+    );
 }
