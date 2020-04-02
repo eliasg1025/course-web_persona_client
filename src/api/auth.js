@@ -5,7 +5,7 @@ import jwtDecode from 'jwt-decode';
 export function getAccessTokenApi() {
     const accessToken = localStorage.getItem(ACCESS_TOKEN);
 
-    if (!accessToken || accessToken == null) {
+    if (!accessToken) {
         return null;
     }
 
@@ -15,14 +15,14 @@ export function getAccessTokenApi() {
 export function getRefreshTokenApi() {
     const refreshToken = localStorage.getItem(REFRESH_TOKEN);
 
-    if (!refreshToken || refreshToken == null) {
+    if (!refreshToken) {
         return null;
     }
 
     return willExpiredToken(refreshToken) ? null : refreshToken;
 }
 
-export function refreshAccessToken(refreshToken) {
+export function refreshAccessTokenApi(refreshToken) {
     const url = `${basePath}/${apiVersion}/refresh-access-token`;
     const bodyObj = {
         refreshToken: refreshToken
@@ -45,13 +45,18 @@ export function refreshAccessToken(refreshToken) {
         })
         .then(result => {
             if (!result) {
-                // TO DO: deslogear usuario
+                logout();
             } else {
                 const { accessToken, refreshToken } = result;
                 localStorage.setItem(ACCESS_TOKEN, accessToken);
                 localStorage.setItem(REFRESH_TOKEN, refreshToken);
             }
         });
+}
+
+export function logout() {
+    localStorage.removeItem(ACCESS_TOKEN);
+    localStorage.removeItem(REFRESH_TOKEN);
 }
 
 function willExpiredToken(token) {
