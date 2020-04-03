@@ -12,13 +12,13 @@ export default function User() {
 
     useEffect(() => {
         getUserActiveApi(token, true).then(response => {
-            setUsersActive(response);
+            setUsersActive(response.users);
         });
     }, [token]);
 
     useEffect(() => {
         getUserActiveApi(token, false).then(response => {
-            setUsersInactive(response);
+            setUsersInactive(response.users);
         });
     }, [token]);
 
