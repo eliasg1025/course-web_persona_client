@@ -10,8 +10,6 @@ function MenuSider(props) {
     const { menuCollapsed, location } = props;
     const { Sider } = Layout;
 
-    console.log(location.pathname);
-
     return (
         <Sider className='menu-sider' collapsed={menuCollapsed}>
             <Menu
