@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getAccessTokenApi } from '../../../api/auth';
 import { getUserActiveApi } from '../../../api/user';
+import ListUsers from '../../../components/Admin/Users/ListUsers';
 
 import './User.scss';
 
@@ -8,8 +9,6 @@ export default function User() {
     const [usersActive, setUsersActive] = useState([]);
     const [usersInactive, setUsersInactive] = useState([]);
     const token = getAccessTokenApi();
-
-    console.log({ usersActive, usersInactive });
 
     useEffect(() => {
         getUserActiveApi(token, true).then(response => {
@@ -24,8 +23,11 @@ export default function User() {
     }, [token]);
 
     return (
-        <div>
-            <h1>Lista de usuarios</h1>
+        <div className='users'>
+            <ListUsers
+                usersActive={usersActive}
+                usersInactive={usersInactive}
+            />
         </div>
     );
 }
