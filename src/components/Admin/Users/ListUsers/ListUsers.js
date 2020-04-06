@@ -8,6 +8,7 @@ import {
 } from '@ant-design/icons';
 import NoAvatar from '../../../../assets/img/png/no-avatar.png';
 import Modal from '../../../Modal';
+import EditUserForm from '../EditUserForm';
 
 import './ListUsers.scss';
 
@@ -68,7 +69,7 @@ function UsersActive(props) {
                 user.lastname ? user.name : '...'
             }`
         );
-        setModalContent('Editando un usuario');
+        setModalContent(<EditUserForm user={user} />);
     };
 
     return (
