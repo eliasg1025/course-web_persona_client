@@ -7,14 +7,16 @@ import {
     CheckOutlined
 } from '@ant-design/icons';
 import NoAvatar from '../../../../assets/img/png/no-avatar.png';
+import Modal from '../../../Modal';
 
 import './ListUsers.scss';
 
 export default function ListUsers(props) {
     const { usersActive, usersInactive } = props;
     const [viewUsersActive, setViewUsersActive] = useState(true);
-
-    console.log({ usersActive, usersInactive });
+    const [isVisibleModal, setIsVisibleModal] = useState(false);
+    const [modalTitle, setModalTitle] = useState('');
+    const [modalContent, setModalContent] = useState(null);
 
     return (
         <div className='list-users'>
@@ -30,16 +32,45 @@ export default function ListUsers(props) {
                 </span>
             </div>
             {viewUsersActive ? (
-                <UsersActive usersActive={usersActive} />
+                <UsersActive
+                    usersActive={usersActive}
+                    setIsVisibleModal={setIsVisibleModal}
+                    setModalTitle={setModalTitle}
+                    setModalContent={setModalContent}
+                />
             ) : (
                 <UsersInactive usersInactive={usersInactive} />
             )}
+
+            <Modal
+                title={modalTitle}
+                isVisible={isVisibleModal}
+                setIsVisible={setIsVisibleModal}
+            >
+                {modalContent}
+            </Modal>
         </div>
     );
 }
 
 function UsersActive(props) {
-    const { usersActive } = props;
+    const {
+        usersActive,
+        setIsVisibleModal,
+        setModalTitle,
+        setModalContent
+    } = props;
+
+    const editUser = user => {
+        setIsVisibleModal(true);
+        setModalTitle(
+            `Editar ${user.name ? user.name : '...'} ${
+                user.lastname ? user.name : '...'
+            }`
+        );
+        setModalContent('Editando un usuario');
+    };
+
     return (
         <List
             className='users-active'
@@ -48,10 +79,7 @@ function UsersActive(props) {
             renderItem={user => (
                 <List.Item
                     actions={[
-                        <Button
-                            type='primary'
-                            onClick={() => console.log('Editar usuario')}
-                        >
+                        <Button type='primary' onClick={() => editUser(user)}>
                             <EditOutlined />
                         </Button>,
                         <Button
