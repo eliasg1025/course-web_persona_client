@@ -1,5 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Avatar, Form, Input, Select, Button, Row, Col } from 'antd';
+import { UserOutlined, MailOutlined, LockOutlined } from '@ant-design/icons';
 import { useDropzone } from 'react-dropzone';
 import NoAvatar from '../../../../assets/img/png/no-avatar.png';
 
@@ -8,12 +9,37 @@ import './EditUserForm.scss';
 export default function EditUserForm(props) {
     const { user } = props;
     const [avatar, setAvatar] = useState(null);
-    console.log(avatar);
+    const [userData, setUserData] = useState({
+        name: user.name,
+        lastname: user.lastname,
+        email: user.email,
+        role: user.role,
+        avatar: user.avatar
+    });
+
+    useEffect(() => {
+        if (avatar) {
+            setUserData({
+                ...userData,
+                avatar
+            });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [avatar]);
+
+    const updateUser = e => {
+        e.preventDefault();
+        console.log(userData);
+    };
 
     return (
         <div className='edit-user-form'>
             <UploadAvatar avatar={avatar} setAvatar={setAvatar} />
-            <h2>{user.email}</h2>
+            <EditForm
+                userData={userData}
+                setUserData={setUserData}
+                updateUser={updateUser}
+            />
         </div>
     );
 }
@@ -43,6 +69,127 @@ function UploadAvatar(props) {
             ) : (
                 <Avatar size={150} src={avatar ? avatar.preview : NoAvatar} />
             )}
+        </div>
+    );
+}
+
+function EditForm(props) {
+    const { userData, setUserData, updateUser } = props;
+    const { Option } = Select;
+
+    return (
+        <div>
+            <Form className='form-edit' onSubmitCapture={updateUser}>
+                <Row gutter={24}>
+                    <Col span={12}>
+                        <Form.Item>
+                            <Input
+                                prefix={<UserOutlined />}
+                                placeholder='Nombre'
+                                defaultValue={userData.name}
+                                onChange={e =>
+                                    setUserData({
+                                        ...userData,
+                                        name: e.target.value
+                                    })
+                                }
+                            />
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item>
+                            <Input
+                                prefix={<UserOutlined />}
+                                placeholder='Apellidos'
+                                defaultValue={userData.lastname}
+                                onChange={e =>
+                                    setUserData({
+                                        ...userData,
+                                        lastname: e.target.value
+                                    })
+                                }
+                            />
+                        </Form.Item>
+                    </Col>
+                </Row>
+                <Row gutter={24}>
+                    <Col span={12}>
+                        <Form.Item>
+                            <Input
+                                prefix={<MailOutlined />}
+                                placeholder='Correo Electronico'
+                                defaultValue={userData.email}
+                                onChange={e =>
+                                    setUserData({
+                                        ...userData,
+                                        email: e.target.value
+                                    })
+                                }
+                            />
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item>
+                            <Select
+                                placeholder='Selecciona un rol de usuario'
+                                onChange={e =>
+                                    setUserData({
+                                        ...userData,
+                                        role: e
+                                    })
+                                }
+                                defaultValue={userData.role}
+                            >
+                                <Option value='admin'>Administrador</Option>
+                                <Option value='editor'>Editor</Option>
+                                <Option value='reviewer'>Revisor</Option>
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                </Row>
+                <Row gutter={24}>
+                    <Col span={12}>
+                        <Form.Item>
+                            <Input
+                                prefix={<LockOutlined />}
+                                type='password'
+                                placeholder='Contraseña'
+                                onChange={e =>
+                                    setUserData({
+                                        ...userData,
+                                        password: e.target.value
+                                    })
+                                }
+                            />
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item>
+                            <Input
+                                prefix={<LockOutlined />}
+                                type='password'
+                                placeholder='Repetir Contraseña'
+                                onChange={e =>
+                                    setUserData({
+                                        ...userData,
+                                        repeatPassword: e.target.value
+                                    })
+                                }
+                            />
+                        </Form.Item>
+                    </Col>
+                </Row>
+
+                <Form.Item>
+                    <Button
+                        type='primary'
+                        htmlType='submit'
+                        className='btn-submit'
+                    >
+                        Actualizar Usuario
+                    </Button>
+                </Form.Item>
+            </Form>
         </div>
     );
 }
