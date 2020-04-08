@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { Switch, List, Avatar, Button } from 'antd';
 import {
     EditOutlined,
@@ -9,6 +9,7 @@ import {
 import NoAvatar from '../../../../assets/img/png/no-avatar.png';
 import Modal from '../../../Modal';
 import EditUserForm from '../EditUserForm';
+import { getAvatarApi } from '../../../../api/user'
 
 import './ListUsers.scss';
 
@@ -78,40 +79,63 @@ function UsersActive(props) {
             itemLayout='horizontal'
             dataSource={usersActive}
             renderItem={user => (
-                <List.Item
-                    actions={[
-                        <Button type='primary' onClick={() => editUser(user)}>
-                            <EditOutlined />
-                        </Button>,
-                        <Button
-                            type='danger'
-                            onClick={() => console.log('Desactivar usuario')}
-                        >
-                            <StopOutlined />
-                        </Button>,
-                        <Button
-                            type='danger'
-                            onClick={() => console.log('Eliminar usuario')}
-                        >
-                            <DeleteOutlined />
-                        </Button>
-                    ]}
+                <UserActive
+                    user={user}
+                    editUser={editUser}
+                />
+            )}
+        />
+    );
+}
+
+function UserActive(props) {
+    const { user, editUser } = props;
+    const [avatar, setAvatar] = useState(null);
+
+    useEffect(() => {
+        if (user.avatar) {
+            getAvatarApi(user.avatar)
+                .then(response => {
+                    setAvatar(response);
+                });
+        } else {
+            setAvatar(null);
+        }
+    }, [user]);
+
+    return (
+        <List.Item
+            actions={[
+                <Button type='primary' onClick={() => editUser(user)}>
+                    <EditOutlined />
+                </Button>,
+                <Button
+                    type='danger'
+                    onClick={() => console.log('Desactivar usuario')}
                 >
-                    <List.Item.Meta
-                        avatar={
-                            <Avatar
-                                src={user.avatar ? user.avatar : NoAvatar}
-                            />
-                        }
-                        title={`
+                    <StopOutlined />
+                </Button>,
+                <Button
+                    type='danger'
+                    onClick={() => console.log('Eliminar usuario')}
+                >
+                    <DeleteOutlined />
+                </Button>
+            ]}
+        >
+            <List.Item.Meta
+                avatar={
+                    <Avatar
+                        src={avatar ? avatar : NoAvatar}
+                    />
+                }
+                title={`
                             ${user.name ? user.name : '...'}
                             ${user.lastname ? user.lastname : '...'}
                         `}
-                        description={user.email}
-                    />
-                </List.Item>
-            )}
-        />
+                description={user.email}
+            />
+        </List.Item>
     );
 }
 
@@ -123,36 +147,56 @@ function UsersInactive(props) {
             itemLayout='horizontal'
             dataSource={usersInactive}
             renderItem={user => (
-                <List.Item
-                    actions={[
-                        <Button
-                            type='primary'
-                            onClick={() => console.log('Activar usuario')}
-                        >
-                            <CheckOutlined />
-                        </Button>,
-                        <Button
-                            type='danger'
-                            onClick={() => console.log('Eliminar usuario')}
-                        >
-                            <DeleteOutlined />
-                        </Button>
-                    ]}
+                <UserInactive user={user}/>
+            )}
+        />
+    );
+}
+
+function UserInactive(props) {
+    const { user } = props;
+    const [avatar, setAvatar] = useState(null);
+
+    useEffect(() => {
+        if (user.avatar) {
+            getAvatarApi(user.avatar)
+                .then(response => {
+                    setAvatar(response);
+                });
+        } else {
+            setAvatar(null);
+        }
+    }, [user]);
+
+    return (
+        <List.Item
+            actions={[
+                <Button
+                    type='primary'
+                    onClick={() => console.log('Activar usuario')}
                 >
-                    <List.Item.Meta
-                        avatar={
-                            <Avatar
-                                src={user.avatar ? user.avatar : NoAvatar}
-                            />
-                        }
-                        title={`
+                    <CheckOutlined />
+                </Button>,
+                <Button
+                    type='danger'
+                    onClick={() => console.log('Eliminar usuario')}
+                >
+                    <DeleteOutlined />
+                </Button>
+            ]}
+        >
+            <List.Item.Meta
+                avatar={
+                    <Avatar
+                        src={avatar ? avatar : NoAvatar}
+                    />
+                }
+                title={`
                             ${user.name ? user.name : '...'}
                             ${user.lastname ? user.lastname : '...'}
                         `}
-                        description={user.email}
-                    />
-                </List.Item>
-            )}
-        />
+                description={user.email}
+            />
+        </List.Item>
     );
 }
