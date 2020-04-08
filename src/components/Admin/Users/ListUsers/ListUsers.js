@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { Switch, List, Avatar, Button } from 'antd';
 import {
     EditOutlined,
@@ -9,12 +9,12 @@ import {
 import NoAvatar from '../../../../assets/img/png/no-avatar.png';
 import Modal from '../../../Modal';
 import EditUserForm from '../EditUserForm';
-import { getAvatarApi } from '../../../../api/user'
+import { getAvatarApi } from '../../../../api/user';
 
 import './ListUsers.scss';
 
 export default function ListUsers(props) {
-    const { usersActive, usersInactive } = props;
+    const { usersActive, usersInactive, setReloadUser } = props;
     const [viewUsersActive, setViewUsersActive] = useState(true);
     const [isVisibleModal, setIsVisibleModal] = useState(false);
     const [modalTitle, setModalTitle] = useState('');
@@ -39,6 +39,7 @@ export default function ListUsers(props) {
                     setIsVisibleModal={setIsVisibleModal}
                     setModalTitle={setModalTitle}
                     setModalContent={setModalContent}
+                    setReloadUser={setReloadUser}
                 />
             ) : (
                 <UsersInactive usersInactive={usersInactive} />
@@ -60,17 +61,24 @@ function UsersActive(props) {
         usersActive,
         setIsVisibleModal,
         setModalTitle,
-        setModalContent
+        setModalContent,
+        setReloadUser
     } = props;
 
     const editUser = user => {
         setIsVisibleModal(true);
         setModalTitle(
             `Editar ${user.name ? user.name : '...'} ${
-                user.lastname ? user.name : '...'
+                user.lastname ? user.lastname : '...'
             }`
         );
-        setModalContent(<EditUserForm user={user} />);
+        setModalContent(
+            <EditUserForm
+                user={user}
+                setIsVisibleModal={setIsVisibleModal}
+                setReloadUser={setReloadUser}
+            />
+        );
     };
 
     return (
@@ -78,12 +86,7 @@ function UsersActive(props) {
             className='users-active'
             itemLayout='horizontal'
             dataSource={usersActive}
-            renderItem={user => (
-                <UserActive
-                    user={user}
-                    editUser={editUser}
-                />
-            )}
+            renderItem={user => <UserActive user={user} editUser={editUser} />}
         />
     );
 }
@@ -94,10 +97,9 @@ function UserActive(props) {
 
     useEffect(() => {
         if (user.avatar) {
-            getAvatarApi(user.avatar)
-                .then(response => {
-                    setAvatar(response);
-                });
+            getAvatarApi(user.avatar).then(response => {
+                setAvatar(response);
+            });
         } else {
             setAvatar(null);
         }
@@ -124,11 +126,7 @@ function UserActive(props) {
             ]}
         >
             <List.Item.Meta
-                avatar={
-                    <Avatar
-                        src={avatar ? avatar : NoAvatar}
-                    />
-                }
+                avatar={<Avatar src={avatar ? avatar : NoAvatar} />}
                 title={`
                             ${user.name ? user.name : '...'}
                             ${user.lastname ? user.lastname : '...'}
@@ -146,9 +144,7 @@ function UsersInactive(props) {
             className='users-active'
             itemLayout='horizontal'
             dataSource={usersInactive}
-            renderItem={user => (
-                <UserInactive user={user}/>
-            )}
+            renderItem={user => <UserInactive user={user} />}
         />
     );
 }
@@ -159,10 +155,9 @@ function UserInactive(props) {
 
     useEffect(() => {
         if (user.avatar) {
-            getAvatarApi(user.avatar)
-                .then(response => {
-                    setAvatar(response);
-                });
+            getAvatarApi(user.avatar).then(response => {
+                setAvatar(response);
+            });
         } else {
             setAvatar(null);
         }
@@ -186,11 +181,7 @@ function UserInactive(props) {
             ]}
         >
             <List.Item.Meta
-                avatar={
-                    <Avatar
-                        src={avatar ? avatar : NoAvatar}
-                    />
-                }
+                avatar={<Avatar src={avatar ? avatar : NoAvatar} />}
                 title={`
                             ${user.name ? user.name : '...'}
                             ${user.lastname ? user.lastname : '...'}
