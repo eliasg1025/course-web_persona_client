@@ -1,21 +1,69 @@
 import React, { useState, useEffect } from 'react';
+import { Switch, List, Button, Modal as ModalAntd, notification } from 'antd';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import DragSortableList from 'react-drag-sortable';
+import Modal from '../../../Modal';
+
+import './MenuWebList.scss';
+
+const { confirm } = ModalAntd;
 
 export default function MenuWebList(props) {
-    const { menu, setReloadMenu } = props;
+    const { menu, setReloadMenuWeb } = props;
 
-    let menu1 = [
-        {_id: 'dadasdsa', title: 'Blogs'},
-        {_id: 'dasdasaa', title: 'Cursos'}
-    ]
+    const [listItems, setListItems] = useState([]);
+    const [isVisisbleModal, setIsVisibleModal] = useState(false);
+    const [modalTitle, setModalTitle] = useState('');
+    const [modalContent, setModalContent] = useState(null);
+
+    console.log(listItems);
+
+    useEffect(() => {
+        const listItemsArray = [];
+        menu.forEach(item => {
+            listItemsArray.push({
+                content: <MenuItem item={item} />
+            });
+        });
+        setListItems(listItemsArray);
+    }, [menu]);
+
+    const onSort = (sortedList, dropEvent) => {
+        console.log(sortedList);
+    };
 
     return (
-        <div>
-            <h1>MenuWebList</h1>
-            {
-                menu1.map(item => (
-                    <p key={item._id}>{item.title}</p>
-                ))
-            }
+        <div className='menu-web-list'>
+            <div className='menu-web-list__header'>
+                <Button type='primary'>Menu menu</Button>
+            </div>
+            <div className='menu-web-list__items'>
+                <DragSortableList
+                    items={listItems}
+                    onSort={onSort}
+                    type='vertical'
+                />
+            </div>
         </div>
     );
 }
+
+const MenuItem = props => {
+    const { item } = props;
+
+    return (
+        <List.Item
+            actions={[
+                <Switch defaultChecked={item.active} />,
+                <Button type='primary'>
+                    <EditOutlined />
+                </Button>,
+                <Button type='danger'>
+                    <DeleteOutlined />
+                </Button>
+            ]}
+        >
+            <List.Item.Meta title={item.title} description={item.url} />
+        </List.Item>
+    );
+};

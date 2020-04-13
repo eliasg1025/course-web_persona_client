@@ -10,7 +10,7 @@ export default function MenuWeb(props) {
 
     useEffect(() => {
         getMenuApi().then(response => {
-            setMenu(response.menu);
+            setMenu(response.menus);
         });
         setReloadMenuWeb(false);
     }, [reloadMenuWeb]);
