@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Switch, List, Button, Modal as ModalAntd, notification } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import DragSortableList from 'react-drag-sortable';
+
 import Modal from '../../../Modal';
+import AddMenuWebForm from '../AddMenuWebForm';
+
 import { getAccessTokenApi } from '../../../../api/auth';
 import { updateMenuApi, activateMenuApi } from '../../../../api/menu';
 
@@ -54,10 +57,18 @@ export default function MenuWebList(props) {
         });
     };
 
+    const addMenuWebModal = () => {
+        setIsVisibleModal(true);
+        setModalTitle('Creando nuevo menú');
+        setModalContent(<AddMenuWebForm />);
+    };
+
     return (
         <div className="menu-web-list">
             <div className="menu-web-list__header">
-                <Button type="primary">Menu menu</Button>
+                <Button type="primary" onClick={addMenuWebModal}>
+                    Crear menú
+                </Button>
             </div>
             <div className="menu-web-list__items">
                 <DragSortableList
@@ -66,6 +77,14 @@ export default function MenuWebList(props) {
                     type="vertical"
                 />
             </div>
+
+            <Modal
+                title={modalTitle}
+                isVisible={isVisisbleModal}
+                setIsVisible={setIsVisibleModal}
+            >
+                {modalContent}
+            </Modal>
         </div>
     );
 }
