@@ -4,7 +4,7 @@ import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import DragSortableList from 'react-drag-sortable';
 import Modal from '../../../Modal';
 import { getAccessTokenApi } from '../../../../api/auth';
-import { updateMenuApi } from '../../../../api/menu';
+import { updateMenuApi, activateMenuApi } from '../../../../api/menu';
 
 import './MenuWebList.scss';
 
@@ -18,17 +18,30 @@ export default function MenuWebList(props) {
     const [modalTitle, setModalTitle] = useState('');
     const [modalContent, setModalContent] = useState(null);
 
-    console.log(listItems);
-
     useEffect(() => {
         const listItemsArray = [];
         menu.forEach(item => {
             listItemsArray.push({
-                content: <MenuItem item={item} />
+                content: <MenuItem item={item} activateMenu={activateMenu} />
             });
         });
         setListItems(listItemsArray);
     }, [menu]);
+
+    const activateMenu = (menu, status) => {
+        const accessToken = getAccessTokenApi();
+        activateMenuApi(accessToken, menu._id, status)
+            .then(response => {
+                notification['success']({
+                    message: response
+                });
+            })
+            .catch(err => {
+                notification['error']({
+                    message: err
+                });
+            });
+    };
 
     const onSort = (sortedList, dropEvent) => {
         const accessToken = getAccessTokenApi();
@@ -58,12 +71,15 @@ export default function MenuWebList(props) {
 }
 
 const MenuItem = props => {
-    const { item } = props;
+    const { item, activateMenu } = props;
 
     return (
         <List.Item
             actions={[
-                <Switch defaultChecked={item.active} />,
+                <Switch
+                    defaultChecked={item.active}
+                    onChange={e => activateMenu(item, e)}
+                />,
                 <Button type="primary">
                     <EditOutlined />
                 </Button>,
