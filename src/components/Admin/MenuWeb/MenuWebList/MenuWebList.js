@@ -78,7 +78,7 @@ export default function MenuWebList(props) {
 
     const editMenuWebModal = menu => {
         setIsVisibleModal(true);
-        setModalTitle(`Editando menú: ${menu.title} Update`);
+        setModalTitle(`Editando menú: ${menu.title}`);
         setModalContent(
             <EditMenuWebForm
                 setIsVisibleModal={setIsVisibleModal}
