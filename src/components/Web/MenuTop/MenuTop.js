@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Menu } from 'antd';
 import { Link } from 'react-router-dom';
 
+import SocialLinks from '../SocialLinks';
 import { getMenuApi } from '../../../api/menu';
 
 import './MenuTop.scss';
@@ -54,13 +55,7 @@ export default function MenuTop(props) {
                     </Menu.Item>
                 );
             })}
-            {/* <Menu.Item className="menu-top-web__item">
-                <Link to={'/'}>Home</Link>
-            </Menu.Item>
-            <Menu.Item className="menu-top-web__item">
-                <Link to={'/contact'}>Contact</Link>
-            </Menu.Item> */}
-            <div>Social media</div>
+            <SocialLinks />
         </Menu>
     );
 }
