@@ -22,7 +22,7 @@
     }
 
     &__card {
-        height: 285px;
+        min-height: 300px;
         border: 0;
         background-color: $background-dark-light-web;
         border-radius: 10px;

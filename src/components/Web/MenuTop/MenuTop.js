@@ -51,7 +51,7 @@ export default function MenuTop(props) {
 
                 return (
                     <Menu.Item key={item._id} className="menu-top-web__item">
-                        <Link to={'/contact'}>{item.title}</Link>
+                        <Link to={item.url}>{item.title}</Link>
                     </Menu.Item>
                 );
             })}
