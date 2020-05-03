@@ -12,7 +12,7 @@ export default function Courses() {
         getCoursesApi()
             .then(response => {
                 setCourses(response.courses);
-            })
+            });
         
             setReloadCourses();
     }, [reloadCourses]);
