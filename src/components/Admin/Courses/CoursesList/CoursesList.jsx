@@ -3,7 +3,8 @@ import { List, Button, Modal as ModalAntd, notification } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import DragSortableList from "react-drag-sortable";
 import Modal from "../../../Modal";
-import { getCourseDataUdemyApi } from "../../../../api/course";
+import { getAccessTokenApi } from "../../../../api/auth";
+import { getCourseDataUdemyApi, deleteCourseApi } from "../../../../api/course";
 
 import "./CoursesList.scss";
 
@@ -20,7 +21,7 @@ export default function CoursesList(props) {
         const listCourseArray = [];
         courses.forEach((course) => {
             listCourseArray.push({
-                content: <Course course={course} />,
+                content: <Course course={course} deleteCourse={deleteCourse} />,
             });
         });
 
@@ -29,6 +30,34 @@ export default function CoursesList(props) {
 
     const onSort = (sortedList, dropEvent) => {
         console.log(sortedList);
+    };
+
+    const deleteCourse = (course) => {
+        const accessToken = getAccessTokenApi();
+
+        confirm({
+            title: "Eliminando curso",
+            content: `¿Estas seguro que quieres eliminar el curso ${course.idCourse}?`,
+            okText: "Eliminar",
+            okType: "danger",
+            cancelText: "Cancelar",
+            onOk() {
+                deleteCourseApi(accessToken, course._id)
+                    .then((response) => {
+                        const typeNotification =
+                            response.code === 200 ? "success" : "warning";
+                        notification[typeNotification]({
+                            message: response.message,
+                        });
+                        setReloadCourses(true);
+                    })
+                    .catch((err) => {
+                        notification["error"]({
+                            message: "Error del servidor, intentelo más tarde",
+                        });
+                    });
+            },
+        });
     };
 
     return (
@@ -60,7 +89,7 @@ export default function CoursesList(props) {
 }
 
 function Course(props) {
-    const { course } = props;
+    const { course, deleteCourse } = props;
     const [courseData, setCourseData] = useState(null);
 
     useEffect(() => {
@@ -88,10 +117,7 @@ function Course(props) {
                 >
                     <EditOutlined />
                 </Button>,
-                <Button
-                    type="danger"
-                    onClick={() => console.log("Eliminar curso")}
-                >
+                <Button type="danger" onClick={() => deleteCourse(course)}>
                     <DeleteOutlined />
                 </Button>,
             ]}
