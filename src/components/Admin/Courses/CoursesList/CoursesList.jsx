@@ -3,6 +3,7 @@ import { List, Button, Modal as ModalAntd, notification } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import DragSortableList from "react-drag-sortable";
 import Modal from "../../../Modal";
+import AddEditCourseForm from "../AddEditCourseForm";
 import { getAccessTokenApi } from "../../../../api/auth";
 import { getCourseDataUdemyApi, deleteCourseApi } from "../../../../api/course";
 
@@ -26,10 +27,22 @@ export default function CoursesList(props) {
         });
 
         setListCourses(listCourseArray);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [courses]);
 
     const onSort = (sortedList, dropEvent) => {
         console.log(sortedList);
+    };
+
+    const addCourseModal = () => {
+        setIsVisibleModal(true);
+        setModalTitle("Creando nuevo curso");
+        setModalContent(
+            <AddEditCourseForm
+                setIsVisibleModal={setIsVisibleModal}
+                setReloadCourses={setReloadCourses}
+            />
+        );
     };
 
     const deleteCourse = (course) => {
@@ -65,7 +78,7 @@ export default function CoursesList(props) {
             <div className="courses-list__header">
                 <Button
                     type="primary"
-                    onClick={() => console.log("Creando curso...")}
+                    onClick={addCourseModal}
                 >
                     Nuevo curso
                 </Button>
@@ -84,6 +97,14 @@ export default function CoursesList(props) {
                     type="vertical"
                 />
             </div>
+
+            <Modal
+                title={modalTitle}
+                isVisible={isVisibleModal}
+                setIsVisible={setIsVisibleModal}
+            >
+                {modalContent}
+            </Modal>
         </div>
     );
 }
