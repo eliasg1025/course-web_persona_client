@@ -86,7 +86,7 @@ export function updateCourseApi(token, id, data) {
     const url = `${basePath}/${apiVersion}/update-course/${id}`;
 
     const params = {
-        methods: 'PUT',
+        method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
             Authorization: token
