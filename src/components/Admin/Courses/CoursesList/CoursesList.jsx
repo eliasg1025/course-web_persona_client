@@ -22,7 +22,7 @@ export default function CoursesList(props) {
         const listCourseArray = [];
         courses.forEach((course) => {
             listCourseArray.push({
-                content: <Course course={course} deleteCourse={deleteCourse} />,
+                content: <Course course={course} deleteCourse={deleteCourse} editCourseModal={editCourseModal}/>,
             });
         });
 
@@ -41,6 +41,18 @@ export default function CoursesList(props) {
             <AddEditCourseForm
                 setIsVisibleModal={setIsVisibleModal}
                 setReloadCourses={setReloadCourses}
+            />
+        );
+    };
+
+    const editCourseModal = course => {
+        setIsVisibleModal(true);
+        setModalTitle("Actualizando curso");
+        setModalContent(
+            <AddEditCourseForm
+                setIsVisibleModal={setIsVisibleModal}
+                setReloadCourses={setReloadCourses}
+                course={course}
             />
         );
     };
@@ -110,7 +122,7 @@ export default function CoursesList(props) {
 }
 
 function Course(props) {
-    const { course, deleteCourse } = props;
+    const { course, deleteCourse, editCourseModal } = props;
     const [courseData, setCourseData] = useState(null);
 
     useEffect(() => {
@@ -134,7 +146,7 @@ function Course(props) {
             actions={[
                 <Button
                     type="primary"
-                    onClick={() => console.log("Editar curso")}
+                    onClick={() => editCourseModal(course)}
                 >
                     <EditOutlined />
                 </Button>,
