@@ -1,9 +1,10 @@
-import React from 'react';
+import React from "react";
 
 export default function Error404() {
-  return (
-    <div>
-      <h2>Error 404</h2>
-    </div>
-  );
+    return (
+        <div className="error-page">
+            <h2 className="bounce">Error 404</h2>
+            <p>Página no encontrada</p>
+        </div>
+    );
 }
