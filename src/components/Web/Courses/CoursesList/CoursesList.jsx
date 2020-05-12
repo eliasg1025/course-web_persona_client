@@ -11,7 +11,11 @@ export default function CoursesList(props) {
         <div className="courses-list">
             <Row>
                 {courses.map((course) => (
-                    <Col key={course._id} md={4} className="courses-list__course">
+                    <Col
+                        key={course._id}
+                        md={8}
+                        className="courses-list__course"
+                    >
                         <Course course={course} />
                     </Col>
                 ))}
@@ -23,24 +27,67 @@ export default function CoursesList(props) {
 function Course(props) {
     const { course } = props;
     const [courseInfo, setCourseInfo] = useState({});
+    const [urlCourse, setUrlCourse] = useState(null);
+
+    const { Meta } = Card;
 
     useEffect(() => {
         getCourseDataUdemyApi(course.idCourse)
-            .then(response => {
+            .then((response) => {
                 if (response?.code !== 200) {
-                    notification['warning']({
-                        message: response.message
+                    notification["warning"]({
+                        message: response.message,
                     });
                 } else {
                     setCourseInfo(response.data);
+                    mountUrl(response.data.url);
                 }
             })
-            .catch(err => {
-                notification['error']({
-                    message: 'Error del servidor, intentelo más tarde'
+            .catch((err) => {
+                notification["error"]({
+                    message: "Error del servidor, intentelo más tarde",
                 });
             });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [course]);
 
-    return <p>{ courseInfo.title }</p>;
+    const mountUrl = (url) => {
+        if (!course.link) {
+            const baseUrl = `https://www.udemy.com${url}`;
+            const finalUrl =
+                baseUrl + (course.coupon ? `?couponCode=${course.coupon}` : "");
+                setUrlCourse(finalUrl);
+        } else {
+            setUrlCourse(course.link);
+        }
+    };
+
+    return (
+        <a href={urlCourse} target="_blank" rel="noopener noreferrer">
+            <Card
+                cover={
+                    <img
+                        src={courseInfo.image_480x270}
+                        alt={courseInfo.title}
+                    />
+                }
+            >
+                <Meta
+                    title={courseInfo.title}
+                    description={courseInfo.headline}
+                />
+
+                <Button>Entrar en el curso</Button>
+
+                <div className="courses-list__course-footer">
+                    <span>
+                        {course.price ? `${course.price} $` : courseInfo.price}
+                    </span>
+                    <div>
+                        <Rate disabled={true} defaultValue={5} />
+                    </div>
+                </div>
+            </Card>
+        </a>
+    );
 }
