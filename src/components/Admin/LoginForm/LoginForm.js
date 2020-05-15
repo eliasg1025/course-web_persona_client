@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Input, Button, notification } from 'antd';
+import { Form, Input, Button, Spin, notification } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { signInApi } from '../../../api/user';
 import { ACCESS_TOKEN, REFRESH_TOKEN } from '../../../utils/constants';
@@ -11,6 +11,7 @@ export default function LoginForm() {
         email: '',
         password: ''
     });
+    const [loading, setLoading] = useState(false);
 
     const changeForm = e => {
         setInputs({
@@ -21,6 +22,7 @@ export default function LoginForm() {
 
     const login = async e => {
         e.preventDefault();
+        setLoading(true);
         const result = await signInApi(inputs);
 
         if (!result.message) {
@@ -39,7 +41,7 @@ export default function LoginForm() {
             });
         }
 
-        console.log(result);
+        setLoading(false);
     };
 
     return (
@@ -71,8 +73,8 @@ export default function LoginForm() {
                 />
             </Form.Item>
             <Form.Item>
-                <Button htmlType='submit' className='login-form__button'>
-                    Entrar
+                <Button htmlType='submit' className='login-form__button' disabled={loading}>
+                    { loading ? <div><Spin /> Cargando</div>   :  'Entrar'}
                 </Button>
             </Form.Item>
         </Form>
