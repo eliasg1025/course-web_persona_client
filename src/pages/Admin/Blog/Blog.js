@@ -1,14 +1,48 @@
 import React, { useState, useEffect } from 'react';
 import { Button, notification } from 'antd';
+import { withRouter } from 'react-router-dom';
+import queryString from 'query-string';
+
 import Modal from '../../../components/Modal';
+import PostList from '../../../components/Admin/Blog/PostList';
+
+import { getPostsApi } from '../../../api/post';
 
 import './Blog.scss';
 
-export default function Blog() {
+function Blog(props) {
+    const [posts, setPosts] = useState(null);
+    const [reloadPosts, setReloadPosts] = useState(false);
     const [modalTitle, setModalTitle] = useState('');
     const [isVisibleModal, setIsVisibleModal] = useState(false);
     const [modalContent, setModalContent] = useState(null);
 
+    // eslint-disable-next-line no-restricted-globals
+    const { page = 1 } = queryString.parse(location.search);
+
+    useEffect(() => {
+        getPostsApi(5, page)
+            .then(response => {
+                if (response?.code !== 200) {
+                    notification['warning']({
+                        message: response.message
+                    });
+                } else {
+                    setPosts(response.posts);
+                }
+            })
+            .catch(err => {
+                notification['error']({
+                    message: 'Error del servidor'
+                });
+            });
+
+            setReloadPosts(false);
+    }, [page]);
+
+    if (!posts) {
+        return null;
+    }
 
     return (
         <div className="blog">
@@ -18,7 +52,7 @@ export default function Blog() {
                 </Button>
             </div>
 
-            <h1>Post list</h1>
+            <PostList posts={posts} />
             <h2>Paginacion</h2>
 
             <Modal
@@ -30,3 +64,5 @@ export default function Blog() {
         </div>
     );
 }
+
+export default withRouter(Blog);
